@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`快照测试 render Message component correctly 1`] = `
+<li
+  className="list-group-item"
+>
+  zhufeng
+</li>
+`;
