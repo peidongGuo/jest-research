@@ -1,21 +1,26 @@
+### 
 
-前端项目测试的分类
+### 前端项目测试的分类
+
 1. 公共工具/方法 的测试；
-2. 数据接口层测试；
-3. UI层测试；
-4. 集成测试；
-JEST 是怎么解决各类测试的呢？
-公共工具/方法的测试
+1. 数据接口层测试；
+1. UI层测试；
+1. 集成测试；
+### JEST 是怎么解决各类测试的呢？
+#### 公共工具/方法的测试
 这个是最简单的测试。基本属于函数式编程，同样的输入就会有同样的输出。
+```javascript
 const sum = require("lodash/sum");
 describe("测试 Lodash", () => {
   test("测试 sum 方法", () => {
     expect(sum([2, 3])).toBe(5);
   });
 });
+```
 
-数据接口层测试
+#### 数据接口层测试
 一般前端项目中，请求数据都会做成 service 层，暴露一些异步请求方法出来。咱们可以直接用异步请示来模拟一下。
+```javascript
 const axios = require("axios");
 
 function fetchData3() {
@@ -63,12 +68,14 @@ describe("测试异步流程", () => {
   });
 });
 
-UI 层测试
+```
+#### UI 层测试
 每当你想要确保你的UI不会有意外的改变，快照测试是非常有用的工具。
 典型的做法是在渲染了UI组件之后，保存一个快照文件， 检测他是否与保存在单元测试旁的快照文件相匹配。 若两个快照不匹配，测试将失败：有可能做了意外的更改，或者UI组件已经更新到了新版本。
 测试React组件可以采用类似的方法。 你只需要测试对应的React树的序列号值即可，而不需要渲染整个React程序。 
-快照文件应该和项目代码一起提交并做代码评审。 Jest uses pretty-format to make snapshots human-readable during code review. 在随后的单元测试例子中，Jest会对比上一个快照和渲染输出。 如果它们相匹配，则测试通过。 若未能匹配，要么是单元测试发现了你代码中的Bug，要么是代码实现已经变了，需要更新测试快照文件。
+快照文件应该和项目代码一起提交并做代码评审。 Jest uses [pretty-format](https://github.com/facebook/jest/tree/main/packages/pretty-format) to make snapshots human-readable during code review. 在随后的单元测试例子中，Jest会对比上一个快照和渲染输出。 如果它们相匹配，则测试通过。 若未能匹配，要么是单元测试发现了你代码中的Bug，要么是代码实现已经变了，需要更新测试快照文件。
 在代码引入错误后，很容易就通过快照发现为何单元测试失败了。 发生这种情况时，需要解决以使你的快照测试再次通过。 现在，让我们讨论一个故意使快照测试失败的案例。
+```javascript
 import renderer from "react-test-renderer";
 import Message from "../../components/Message";
 
@@ -80,8 +87,10 @@ describe("快照测试", () => {
   });
 });
 
-集成测试
+```
+#### 集成测试
 集成就是从用户使用这个组件的角度进行测试。这个时间需要使用 JEST+ React Test Library 来做。
+```javascript
 import React from "react";
 import Message from "../../components/Message";
 import { render, screen } from "@testing-library/react";
@@ -97,9 +106,11 @@ describe("测试Message", () => {
   });
 });
 
+```
 
-端到端测试
+#### 端到端测试
 端到端测试就是模拟用户在真实环境下使用这个模块的整体功能。需要使用无头浏览器。JEST + Puppteer。
+```javascript
 let puppeteer = require("puppeteer");
 let $ = require("jquery");
 var browser;
@@ -139,18 +150,25 @@ describe("测试无头浏览器", () => {
   });
 });
 
-JEST 一些其它功能
+```
+### JEST 一些其它功能
+
 1. 简洁的 javascript 测试框架；
-2. 开箱即用；
-3. 支持 Babel、TypeScript、Node、React、Angular、Vue 等诸多框架！
-4. 支持代码覆盖率的计算；
-5. 强大的模拟函数功能，让你可从任何一层程序开始测试；
-Ant  Design 项目测试方案
+1. 开箱即用；
+1. 支持 [Babel](https://babeljs.io/)、[TypeScript](https://www.typescriptlang.org/)、[Node](https://nodejs.org/)、[React](https://reactjs.org/)、[Angular](https://angular.io/)、[Vue](https://vuejs.org/) 等诸多框架！
+1. 支持代码覆盖率的计算；
+1. 强大的模拟函数功能，让你可从任何一层程序开始测试；
+### Ant  Design 项目测试方案
+
 1. 测试框架：JEST
-2. 测试工具集： react-dom/test-utils   test-library/react   enzyme
+1. 测试工具集： react-dom/test-utils   test-library/react   enzyme
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/12501571/1655711892534-9f1e758a-8e12-484e-8ec8-023b8215d402.png#clientId=u8c048e91-8c10-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=239&id=N9xLF&margin=%5Bobject%20Object%5D&name=image.png&originHeight=239&originWidth=541&originalType=binary&ratio=1&rotation=0&showTitle=false&size=60265&status=done&style=none&taskId=u87fe3f5b-cf87-4d68-810d-946d9ed44b7&title=&width=541)
 
 3.  ant design 这种混用的测试方式，不为官方推荐。最好是在老项目里用 enzyme，在新项目中拥抱 react-testing-library；原因，enzyme 三年没有更新了   Test-library/react-testing-library 最新更新日在3天前。
-4. 每个组件单独做一个文件夹，然后每个里面去做测试用例、说明文档等
-参考链接
-  1. jest
-2. puppteer 中文
+3. 每个组件单独做一个文件夹，然后每个里面去做测试用例、说明文档等
+### 参考链接
+  1. [jest](https://jest.io)
+
+2. [puppteer 中文](http://www.puppeteerjs.com/#?product=Puppeteer&version=v15.3.1&show=api-pageselector)
+
